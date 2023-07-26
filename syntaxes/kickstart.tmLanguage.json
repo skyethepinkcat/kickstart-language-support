@@ -1,0 +1,152 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Kickstart",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#sections" },
+    { "include": "#strings" },
+    { "include": "#commands" }
+  ],
+  "repository": {
+    "commands": {
+      "patterns": [
+        {
+          "comment": "Kickstart commands for installation program configuration and flow control",
+          "match": "^\\s*(cdrom|cmdline|driverdisk|eula|firstboot|graphical|halt|harddrive|liveimg|logging|mediacheck|nfs|ostreesetup|poweroff|reboot|rhsm|shutdown|sshpw|text|url|vnc|%include|%ksappend)\\b",
+          "captures": {
+            "1": { "name": "keyword.other.command.kickstart" }
+          }
+        },
+        {
+          "comment": "Kickstart commands for system configuration",
+          "match": "^\\s*(authselect|firewall|group|keyboard|lang|module|repo|rootpw|selinux|services|skipx|sshkey|syspurpose|timezone|timesource|user|xconfig)\\b",
+          "captures": {
+            "1": { "name": "keyword.other.command.kickstart" }
+          }
+        },
+        {
+          "comment": "Kickstart commands for network configuration",
+          "match": "^\\s*(network|realm)\\b",
+          "captures": {
+            "1": { "name": "keyword.other.command.kickstart" }
+          }
+        },
+        {
+          "comment": "Kickstart commands for handling storage",
+          "match": "^\\s*(autopart|bootloader|zipl|clearpart|fcoe|ignoredisk|iscsi|iscsiname|logvol|mount|nvdimm|part|partition|raid|reqpart|snapshot|volgroup|zerombr|zfcp)\\b",
+          "captures": {
+            "1": { "name": "keyword.other.command.kickstart" }
+          }
+        },
+        {
+          "comment": "Kickstart commands for system recovery",
+          "match": "^\\s*(rescue)\\b",
+          "captures": {
+            "1": { "name": "keyword.other.command.kickstart" }
+          }
+        }
+      ]
+    },
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.kickstart",
+          "begin": "#",
+          "end": "$"
+        }
+      ]
+    },
+    "sections": {
+      "patterns": [
+        {
+          "name": "meta.section.addon.kickstart",
+          "begin": "^\\s*(%addon)\\s*(\\S+)\\b(.*)$",
+          "end": "^\\s*(%end)\\s*$",
+          "captures": {
+            "1": { "name": "keyword.control.packages.kickstart" },
+            "2": { "name": "string.unquoted.addon.kickstart" },
+            "3": { "patterns": [{ "include": "#strings" }] }
+          },
+          "patterns": [{ "include": "#comments" }, { "include": "#strings" }]
+        },
+        {
+          "name": "meta.section.anaconda.kickstart",
+          "begin": "^\\s*(%anaconda)\\b.*$",
+          "end": "^\\s*(%end)\\s*$",
+          "captures": {
+            "1": { "name": "keyword.control.anaconda.kickstart" }
+          },
+          "patterns": [{ "include": "#comments" }, { "include": "#strings" }]
+        },
+        {
+          "name": "meta.section.packages.kickstart",
+          "begin": "^\\s*(%packages)\\b.*$",
+          "end": "^\\s*(%end)\\s*$",
+          "captures": {
+            "1": { "name": "keyword.control.packages.kickstart" }
+          },
+          "patterns": [
+            { "include": "#comments" },
+            {
+              "name": "string.unquoted.packages.environment.kickstart",
+              "match": "^\\s*(-)?@\\^.*$",
+              "captures": {
+                "1": { "name": "keyword.operator.logical.not.kickstart" }
+              }
+            },
+            {
+              "name": "string.unquoted.packages.group.kickstart",
+              "match": "^\\s*(-)?@.*$",
+              "captures": {
+                "1": { "name": "keyword.operator.logical.not.kickstart" }
+              }
+            },
+            {
+              "match": "^\\s*(-)",
+              "captures": {
+                "1": { "name": "keyword.operator.logical.not.kickstart" }
+              }
+            },
+            {
+              "name": "variable.language.special.wildcard.kickstart",
+              "match": "\\*"
+            }
+          ]
+        },
+        {
+          "name": "meta.section.script.kickstart",
+          "begin": "^\\s*(%(pre|pre-install|post|on-error))\\b.*$",
+          "end": "^\\s*(%end)\\s*$",
+          "captures": {
+            "1": {
+              "name": "keyword.control.script.kickstart"
+            }
+          },
+          "contentName": "meta.embedded.inline.shell",
+          "patterns": [{ "include": "source.shell" }]
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.kickstart",
+      "begin": "(['\"])",
+      "beginCaptures": {
+        "0": { "name": "markup.punctuation.quote.begin.kickstart" }
+      },
+      "end": "\\1",
+      "endCaptures": {
+        "0": { "name": "markup.punctuation.quote.end.kickstart" }
+      },
+      "captures": {
+        "0": { "name": "string.quoted.kickstart" }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.kickstart",
+          "match": "\\\\."
+        }
+      ]
+    }
+  },
+  "scopeName": "source.kickstart"
+}

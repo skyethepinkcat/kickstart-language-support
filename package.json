@@ -1,0 +1,37 @@
+{
+  "name": "kickstart-language-support",
+  "publisher": "peterjonsson",
+  "displayName": "Kickstart Language Support",
+  "description": "Support for Kickstart files",
+  "version": "0.0.1",
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/95jonpet/kickstart-language-support.git"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "kickstart",
+      "aliases": ["Kickstart", "kickstart"],
+      "extensions": [".ks"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "kickstart",
+      "scopeName": "source.kickstart",
+      "path": "./syntaxes/kickstart.tmLanguage.json",
+      "embeddedLanguages": {
+        "meta.embedded.inline.shell": "shellscript"
+      },
+      "tokenTypes": {
+        "meta.embedded.inline.shell": "other"
+      }
+    }]
+  }
+}
