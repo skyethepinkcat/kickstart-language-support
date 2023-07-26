@@ -70,15 +70,6 @@
           "patterns": [{ "include": "#comments" }, { "include": "#strings" }]
         },
         {
-          "name": "meta.section.anaconda.kickstart",
-          "begin": "^\\s*(%anaconda)\\b.*$",
-          "end": "^\\s*(%end)\\s*$",
-          "captures": {
-            "1": { "name": "keyword.control.anaconda.kickstart" }
-          },
-          "patterns": [{ "include": "#comments" }, { "include": "#strings" }]
-        },
-        {
           "name": "meta.section.packages.kickstart",
           "begin": "^\\s*(%packages)\\b.*$",
           "end": "^\\s*(%end)\\s*$",

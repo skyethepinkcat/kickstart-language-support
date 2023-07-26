@@ -1,0 +1,26 @@
+{
+  "Addon section": {
+    "prefix": ["%addon", "addon"],
+    "body": ["%addon ${1:addon_name}", "$0", "%end"]
+  },
+  "Package section": {
+    "prefix": ["%packages", "packages"],
+    "body": ["%packages", "$0", "%end"]
+  },
+  "Pre script": {
+    "prefix": ["%pre", "pre"],
+    "body": ["%pre", "$0", "%end"]
+  },
+  "Pre-install script": {
+    "prefix": ["%pre-install", "pre-install"],
+    "body": ["%pre-install", "$0", "%end"]
+  },
+  "Post script": {
+    "prefix": ["%post", "post"],
+    "body": ["%post", "$0", "%end"]
+  },
+  "On-error script": {
+    "prefix": ["%on-error", "on-error"],
+    "body": ["%on-error", "$0", "%end"]
+  }
+}

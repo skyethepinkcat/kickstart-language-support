@@ -13,7 +13,8 @@
     "vscode": "^1.80.0"
   },
   "categories": [
-    "Programming Languages"
+    "Programming Languages",
+    "Snippets"
   ],
   "contributes": {
     "languages": [{
@@ -32,6 +33,10 @@
       "tokenTypes": {
         "meta.embedded.inline.shell": "other"
       }
+    }],
+    "snippets": [{
+      "language": "kickstart",
+      "path": "./snippets/kickstart-snippets.json"
     }]
   }
 }
