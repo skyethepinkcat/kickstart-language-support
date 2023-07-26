@@ -3,7 +3,7 @@
   "publisher": "peterjonsson",
   "displayName": "Kickstart Language Support",
   "description": "Support for Kickstart files",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "icon": "icon.png",
   "repository": {
     "type": "git",
@@ -17,26 +17,37 @@
     "Snippets"
   ],
   "contributes": {
-    "languages": [{
-      "id": "kickstart",
-      "aliases": ["Kickstart", "kickstart"],
-      "extensions": [".ks"],
-      "configuration": "./language-configuration.json"
-    }],
-    "grammars": [{
-      "language": "kickstart",
-      "scopeName": "source.kickstart",
-      "path": "./syntaxes/kickstart.tmLanguage.json",
-      "embeddedLanguages": {
-        "meta.embedded.inline.shell": "shellscript"
-      },
-      "tokenTypes": {
-        "meta.embedded.inline.shell": "other"
+    "languages": [
+      {
+        "id": "kickstart",
+        "aliases": [
+          "Kickstart",
+          "kickstart"
+        ],
+        "extensions": [
+          ".ks"
+        ],
+        "configuration": "./language-configuration.json"
       }
-    }],
-    "snippets": [{
-      "language": "kickstart",
-      "path": "./snippets/kickstart-snippets.json"
-    }]
+    ],
+    "grammars": [
+      {
+        "language": "kickstart",
+        "scopeName": "source.kickstart",
+        "path": "./syntaxes/kickstart.tmLanguage.json",
+        "embeddedLanguages": {
+          "meta.embedded.inline.shell": "shellscript"
+        },
+        "tokenTypes": {
+          "meta.embedded.inline.shell": "other"
+        }
+      }
+    ],
+    "snippets": [
+      {
+        "language": "kickstart",
+        "path": "./snippets/kickstart-snippets.json"
+      }
+    ]
   }
 }
