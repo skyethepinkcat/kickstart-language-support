@@ -2,7 +2,7 @@
   "name": "kickstart-language-support-client",
   "publisher": "peterjonsson",
   "description": "Language Server client for Kickstart Language Support",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/95jonpet/kickstart-language-support.git"

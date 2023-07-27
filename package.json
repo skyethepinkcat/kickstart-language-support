@@ -22,7 +22,13 @@
     "configuration": {
       "type": "object",
       "title": "Kickstart Language Support configuration",
-      "properties": {}
+      "properties": {
+        "kickstartLanguageSupport.linting.lintOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to lint Kickstart files when saved."
+        }
+      }
     },
     "languages": [
       {

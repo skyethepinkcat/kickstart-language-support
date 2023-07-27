@@ -18,6 +18,7 @@ import {
   Position,
   uinteger,
   FileChangeType,
+  DidChangeConfigurationNotification,
 } from "vscode-languageserver/node";
 
 import {
@@ -32,6 +33,7 @@ import {
 const connection = createConnection(ProposedFeatures.all);
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
+let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasTextDocumentSyncCapability = false;
 let hasDiagnosticRelatedInformationCapability = false;
@@ -39,6 +41,9 @@ let hasDiagnosticRelatedInformationCapability = false;
 connection.onInitialize((params: InitializeParams) => {
   const capabilities = params.capabilities;
 
+  hasConfigurationCapability = !!(
+    capabilities.workspace && !!capabilities.workspace.configuration
+  );
   hasWorkspaceFolderCapability = !!(
     capabilities.workspace && !!capabilities.workspace.workspaceFolders
   );
@@ -75,6 +80,9 @@ connection.onInitialize((params: InitializeParams) => {
 });
 
 connection.onInitialized(() => {
+  if (hasConfigurationCapability) {
+    connection.client.register(DidChangeConfigurationNotification.type, undefined);
+  }
   if (hasWorkspaceFolderCapability) {
     connection.workspace.onDidChangeWorkspaceFolders(_event => {
       connection.console.log("Workspace folder change event received.");
@@ -82,10 +90,53 @@ connection.onInitialized(() => {
   }
 });
 
-// Validate open watched files when its contents are changed.
-// This typically occurs while the user is still typing.
-documents.onDidChangeContent(change => {
-  validateTextDocument(change.document);
+interface LintingSettings {
+  lintOnSave: boolean;
+}
+
+interface ServerSettings {
+  linting: LintingSettings;
+}
+
+// Initialize settings to their default values.
+const defaultSettings: ServerSettings = {
+  linting: {
+    lintOnSave: true
+  }
+};
+let globalSettings: ServerSettings = defaultSettings;
+const documentSettings: Map<string, Thenable<ServerSettings>> = new Map();
+
+
+connection.onDidChangeConfiguration(change => {
+  if (hasConfigurationCapability) {
+    documentSettings.clear(); // Reset all cached document settings.
+  } else {
+    globalSettings = <ServerSettings>((change.settings.kickstartLanugageSupport || defaultSettings));
+  }
+
+  // Revalidate all open text documents.
+  documents.all().forEach(document => validateTextDocumentAt(document.uri));
+});
+
+function getDocumentSettings(resource: string): Thenable<ServerSettings> {
+  if (!hasConfigurationCapability) {
+    return Promise.resolve(globalSettings);
+  }
+  let result = documentSettings.get(resource);
+  if (!result) {
+    result = connection.workspace.getConfiguration({
+      scopeUri: resource,
+      section: "kickstartLanguageSupport"
+    });
+    documentSettings.set(resource, result);
+  }
+  return result;
+}
+
+// Clear file-specific settings when files are closed.
+documents.onDidClose(e => {
+  documentSettings.delete(e.document.uri);
 });
 
 function temporaryDir(): string {
@@ -158,10 +209,16 @@ async function validateTextDocumentAt(textDocumentUri: DocumentUri): Promise<voi
 
 // Validate watched files when they are changed.
 // This typically means that the file has been saved.
-connection.onDidChangeWatchedFiles(change => {
+connection.onDidChangeWatchedFiles(async change => {
   for (const event of change.changes) {
     if (event.type === FileChangeType.Deleted) {
       continue; // Deleted files cannot be validated.
+    }
+
+    const settings = await getDocumentSettings(event.uri);
+    if (!settings.linting.lintOnSave) {
+      connection.sendDiagnostics({ uri: event.uri, diagnostics: [] });
+      return;
     }
 
     validateTextDocumentAt(event.uri);
