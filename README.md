@@ -13,4 +13,5 @@ Support for Kickstart (`.ks`) files in Visual Studio Code
 This extension adds the following features to Visual Studio Code:
 
 - Syntax highlighting for `.ks` files.
+- Linting for `.ks` files using `ksvalidator`.
 - Snippets for commonly used sections in `.ks` files.

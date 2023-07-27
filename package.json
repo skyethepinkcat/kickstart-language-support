@@ -14,9 +14,16 @@
   },
   "categories": [
     "Programming Languages",
+    "Linters",
     "Snippets"
   ],
+  "main": "./client/out/extension",
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Kickstart Language Support configuration",
+      "properties": {}
+    },
     "languages": [
       {
         "id": "kickstart",
@@ -49,5 +56,19 @@
         "path": "./snippets/kickstart-snippets.json"
       }
     ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -b",
+    "watch": "tsc -b -w",
+    "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
+  },
+  "devDependencies": {
+    "@types/node": "^16.18.34",
+    "@typescript-eslint/eslint-plugin": "^5.54.0",
+    "@typescript-eslint/parser": "^5.54.0",
+    "eslint": "^8.35.0",
+    "typescript": "^5.1.3"
   }
 }
