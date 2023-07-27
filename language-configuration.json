@@ -24,7 +24,7 @@
   ],
   "folding": {
     "markers": {
-      "start": "^\\s*%(addon|anaconda|on-error|packages|post|pre|pre-install)\\b",
+      "start": "^\\s*%(addon|anaconda|onerror|packages|post|pre|pre-install)\\b",
       "end": "^\\s*%end\\b",
     }
   }

@@ -106,7 +106,7 @@
         },
         {
           "name": "meta.section.script.kickstart",
-          "begin": "^\\s*(%(pre|pre-install|post|on-error))\\b.*$",
+          "begin": "^\\s*(%(pre|pre-install|post|onerror))\\b.*$",
           "end": "^\\s*(%end)\\s*$",
           "captures": {
             "1": {

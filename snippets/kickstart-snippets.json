@@ -19,8 +19,8 @@
     "prefix": ["%post", "post"],
     "body": ["%post", "$0", "%end"]
   },
-  "On-error script": {
-    "prefix": ["%on-error", "on-error"],
-    "body": ["%on-error", "$0", "%end"]
+  "Onerror script": {
+    "prefix": ["%onerror", "onerror"],
+    "body": ["%onerror", "$0", "%end"]
   }
 }
