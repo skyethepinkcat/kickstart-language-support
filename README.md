@@ -15,3 +15,19 @@ This extension adds the following features to Visual Studio Code:
 - Syntax highlighting for `.ks` files.
 - Linting for `.ks` files using `ksvalidator`.
 - Snippets for commonly used sections in `.ks` files.
+
+## Linter install
+
+The `ksvalidator` linter can typically be installed using `dnf` or `yum` on RHEL-based distributions of Linux:
+
+```bash
+dnf install pykickstart
+```
+
+**Note:** The package may be called something different depending on distribution and repo.
+
+For other Linux distributions, [pykickstart](https://pypi.org/project/pykickstart/) can be installed using Python 3 and `pip`:
+
+```bash
+python3 -m pip install pykickstart
+```
