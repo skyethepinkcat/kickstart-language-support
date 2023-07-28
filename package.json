@@ -12,6 +12,9 @@
   "engines": {
     "vscode": "^1.80.0"
   },
+  "extensionKind": [
+    "workspace"
+  ],
   "categories": [
     "Programming Languages",
     "Linters",
