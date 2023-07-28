@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/95jonpet/kickstart-language-support/main/icon.png" width="128" />
+<img src="https://raw.githubusercontent.com/95jonpet/kickstart-language-support/main/icon.png" width="140" />
 
 # Kickstart Language Support
 
