@@ -1,14 +1,15 @@
 {
   "name": "kickstart-language-support",
-  "publisher": "peterjonsson",
   "displayName": "Kickstart Language Support",
-  "description": "Support for Kickstart files",
   "version": "0.0.4",
-  "icon": "icon.png",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/95jonpet/kickstart-language-support.git"
+  "publisher": "peterjonsson",
+  "description": "Support for Kickstart files",
+  "author": {
+    "name": "Peter Jonsson",
+    "url": "https://peterjonsson.se"
   },
+  "icon": "icon.png",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -79,5 +80,12 @@
     "@typescript-eslint/parser": "^5.54.0",
     "eslint": "^8.35.0",
     "typescript": "^5.1.3"
+  },
+  "bugs": {
+    "url": "https://github.com/95jonpet/kickstart-language-support/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/95jonpet/kickstart-language-support.git"
   }
 }
