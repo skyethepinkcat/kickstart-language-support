@@ -1,7 +1,7 @@
 {
   "name": "kickstart-language-support",
   "displayName": "Kickstart Language Support",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publisher": "peterjonsson",
   "description": "Support for Kickstart files",
   "author": {
@@ -69,7 +69,7 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run esbuild-base -- --minify",
-    "esbuild-base": "esbuild ./client/src/extension.ts --bundle --outfile=out/main.js --external:vscode --format=cjs --platform=node",
+    "esbuild-base": "esbuild ./client/src/extension.ts --bundle --outfile=./client/out/extension.js --external:vscode --format=cjs --platform=node",
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "watch": "npm run esbuild-base -- --sourcemap --watch",
     "test-compile": "tsc -p ./",
