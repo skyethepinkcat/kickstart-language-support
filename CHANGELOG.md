@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Replace icon.
 - Add workspace access requirement.
+- Rename meta embedded shellscript scope.
 
 ## [0.0.4] - 2023-07-27
 

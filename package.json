@@ -53,10 +53,10 @@
         "scopeName": "source.kickstart",
         "path": "./syntaxes/kickstart.tmLanguage.json",
         "embeddedLanguages": {
-          "meta.embedded.inline.shell": "shellscript"
+          "meta.embedded.block.shellscript": "shellscript"
         },
         "tokenTypes": {
-          "meta.embedded.inline.shell": "other"
+          "meta.embedded.block.shellscript": "other"
         }
       }
     ],

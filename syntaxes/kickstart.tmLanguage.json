@@ -113,7 +113,7 @@
               "name": "keyword.control.script.kickstart"
             }
           },
-          "contentName": "meta.embedded.inline.shell",
+          "contentName": "meta.embedded.block.shellscript",
           "patterns": [{ "include": "source.shell" }]
         }
       ]
