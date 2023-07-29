@@ -7,7 +7,9 @@ out/**
 node_modules/**
 test_files/**
 client/src/**
+client/node_modules/**
 server/src/**
+server/node_modules/**
 tsconfig.json
 webpack.config.js
 .gitignore
