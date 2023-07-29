@@ -21,7 +21,7 @@
     "Linters",
     "Snippets"
   ],
-  "main": "./client/out/extension",
+  "main": "./out/client/src/extension",
   "contributes": {
     "configuration": {
       "type": "object",
@@ -68,13 +68,12 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run esbuild-base -- --minify",
-    "esbuild-base": "esbuild ./client/src/extension.ts --bundle --outfile=./client/out/extension.js --external:vscode --format=cjs --platform=node",
-    "esbuild": "npm run esbuild-base -- --sourcemap",
-    "watch": "npm run esbuild-base -- --sourcemap --watch",
-    "test-compile": "tsc -p ./",
+    "build": "node ./esbuild.mjs -- --minify",
+    "dev": "node ./esbuild.mjs",
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
-    "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+    "vscode:prepublish": "npm run build",
+    "watch": "node ./esbuild.mjs -- --watch"
   },
   "devDependencies": {
     "@types/node": "^16.18.34",

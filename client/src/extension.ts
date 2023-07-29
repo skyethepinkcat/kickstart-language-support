@@ -12,7 +12,7 @@ let client: LanguageClient;
 
 export function activate(context: ExtensionContext) {
   const serverModule = context.asAbsolutePath(
-    path.join("server", "out", "server.js")
+    path.join("out", "server", "src", "server.js")
   );
 
   const serverOptions: ServerOptions = {
@@ -44,5 +44,6 @@ export function deactivate(): Thenable<void> | undefined {
   if (!client) {
     return undefined;
   }
+
   return client.stop();
 }
