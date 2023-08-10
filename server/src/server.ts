@@ -9,26 +9,19 @@ import {
 import {
   createConnection,
   TextDocuments,
-  Diagnostic,
-  DiagnosticSeverity,
   ProposedFeatures,
   InitializeParams,
   TextDocumentSyncKind,
   InitializeResult,
-  Position,
-  uinteger,
-  FileChangeType,
   DidChangeConfigurationNotification,
 } from "vscode-languageserver/node";
-
-import {
-  URI
-} from "vscode-uri";
 
 import {
   DocumentUri,
   TextDocument
 } from "vscode-languageserver-textdocument";
+
+import { ksvalidatorAvailable, ksvalidatorDiagnostics } from "./ksvalidator";
 
 const connection = createConnection(ProposedFeatures.all);
 const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
@@ -36,7 +29,6 @@ const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 let hasConfigurationCapability = false;
 let hasWorkspaceFolderCapability = false;
 let hasTextDocumentSyncCapability = false;
-let hasDiagnosticRelatedInformationCapability = false;
 
 connection.onInitialize((params: InitializeParams) => {
   const capabilities = params.capabilities;
@@ -47,22 +39,8 @@ connection.onInitialize((params: InitializeParams) => {
   hasWorkspaceFolderCapability = !!(
     capabilities.workspace && !!capabilities.workspace.workspaceFolders
   );
-  hasDiagnosticRelatedInformationCapability = !!(
-    capabilities.textDocument &&
-    capabilities.textDocument.publishDiagnostics &&
-    capabilities.textDocument.publishDiagnostics.relatedInformation
-  );
 
-  // Only listen for text document changes if ksvalidator is available.
-  // The --help flag should always result in a clean exit if the program is available.
-  const ksvalidator = spawnSync("ksvalidator", ["--help"]);
-  hasTextDocumentSyncCapability = ksvalidator.status === 0;
-
-  const result: InitializeResult = {
-    capabilities: {
-      textDocumentSync: TextDocumentSyncKind.None,
-    }
-  };
+  const result: InitializeResult = { capabilities: {} };
   if (hasWorkspaceFolderCapability) {
     result.capabilities.workspace = {
       workspaceFolders: {
@@ -70,12 +48,16 @@ connection.onInitialize((params: InitializeParams) => {
       }
     };
   }
+
+  // Only listen for text document changes if ksvalidator is available.
+  hasTextDocumentSyncCapability = ksvalidatorAvailable();
   if (hasTextDocumentSyncCapability) {
-    connection.console.info("Kickstart files will be validated using `ksvalidator`.");
+    connection.console.info("Found `ksvalidator`. Kickstart files will be validated.");
     result.capabilities.textDocumentSync = TextDocumentSyncKind.Incremental;
   } else {
     connection.console.warn("Unable to find `ksvalidator`. Linting will be disabled.");
   }
+
   return result;
 });
 
@@ -139,90 +121,56 @@ documents.onDidClose(e => {
   documentSettings.delete(e.document.uri);
 });
 
+/**
+ * Creates a new temporary directory.
+ * Note that this directory must be manually removed when it is no longer needed.
+ * @returns Path to a temporary directory.
+ */
 function temporaryDir(): string {
   return fs.mkdtempSync(fs.realpathSync(os.tmpdir()) + path.sep);
 }
 
+/**
+ * Validates a text document.
+ * @param textDocument Text document to validate.
+ */
 async function validateTextDocument(textDocument: TextDocument): Promise<void> {
   const dir = temporaryDir();
   try {
     const file = path.join(dir, "ksvalidator-input.ks");
     fs.writeFileSync(file, textDocument.getText());
-    validateTextDocumentAt(file);
+    await validateTextDocumentAt(file);
     fs.unlinkSync(file);
   } finally {
     fs.rmSync(dir, { recursive: true, force: true });
   }
 }
 
+/**
+ * Validates a text document at a given URI.
+ * @param textDocumentUri URI to the text document to validate.
+ */
 async function validateTextDocumentAt(textDocumentUri: DocumentUri): Promise<void> {
-  const diagnostics: Diagnostic[] = [];
-
-  const uri = URI.parse(textDocumentUri);
-  if (uri.scheme !== "file") {
-    return; // Only validate local files.
-  }
-
-  // Run ksvalidator and extract errors from stderr.
-  connection.console.info(`Validating file using ksvalidator: ${uri.fsPath}`);
-  const ksvalidator = spawnSync("ksvalidator", ["--", uri.fsPath]);
-  const stderr = ksvalidator.status !== 0 ? ksvalidator.stderr.toString() : "";
-  const lines = stderr.split("\n").filter((str) => str);
-
-  const lineRegex = RegExp("on line (\\d+) of");
-  for (let i = 0; i < lines.length - 1; i += 2) {
-    const lineMatches = lines[i].match(lineRegex);
-
-    if (!lineMatches) {
-      continue;
-    }
-
-    const line = Number.parseInt(lineMatches[1]) - 1;
-    const message = lines[i + 1].trim();
-    const diagnostic: Diagnostic = {
-      severity: DiagnosticSeverity.Warning,
-      range: {
-        start: Position.create(line, 0),
-        end: Position.create(line, uinteger.MAX_VALUE)
-      },
-      message,
-      source: "ksvalidator"
-    };
-
-    if (hasDiagnosticRelatedInformationCapability) {
-      diagnostic.relatedInformation = [
-        {
-          location: {
-            uri: textDocumentUri,
-            range: Object.assign({}, diagnostic.range)
-          },
-          message: "ksvalidator considers this line invalid"
-        }
-      ];
-    }
-
-    diagnostics.push(diagnostic);
-  }
-
+  const diagnostics = await ksvalidatorDiagnostics(textDocumentUri);
   connection.sendDiagnostics({ uri: textDocumentUri, diagnostics });
 }
 
-// Validate watched files when they are changed.
-// This typically means that the file has been saved.
-connection.onDidChangeWatchedFiles(async change => {
-  for (const event of change.changes) {
-    if (event.type === FileChangeType.Deleted) {
-      continue; // Deleted files cannot be validated.
-    }
+// Validate tracked files when they are opened.
+documents.onDidOpen(async change => {
+  await validateTextDocument(change.document);
+});
 
-    const settings = await getDocumentSettings(event.uri);
-    if (!settings.linting.lintOnSave) {
-      connection.sendDiagnostics({ uri: event.uri, diagnostics: [] });
-      return;
-    }
+// Validate tracked files when changes are made.
+documents.onDidSave(async change => {
+  const document: TextDocument = change.document;
+  const settings = await getDocumentSettings(document.uri);
 
-    validateTextDocumentAt(event.uri);
+  if (!settings.linting.lintOnSave) {
+    await connection.sendDiagnostics({ uri: document.uri, diagnostics: [] });
+    return;
   }
+
+  await validateTextDocumentAt(document.uri);
 });
 
 documents.listen(connection);
