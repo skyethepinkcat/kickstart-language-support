@@ -6,6 +6,9 @@ import {
   TextDocumentSyncKind,
   InitializeResult,
   DidChangeConfigurationNotification,
+  CompletionItem,
+  CompletionItemKind,
+  TextDocumentPositionParams,
 } from "vscode-languageserver/node";
 import { TextDocument } from "vscode-languageserver-textdocument";
 
@@ -53,7 +56,11 @@ connection.onInitialize((params: InitializeParams) => {
     capabilities.workspace && !!capabilities.workspace.workspaceFolders
   );
 
+  // Configure default capabilities.
+  // Additional capabilities are added conditionally.
   const result: InitializeResult = { capabilities: {} };
+
+  // Synchronize workspace folder capabilities.
   if (hasWorkspaceFolderCapability) {
     result.capabilities.workspace = {
       workspaceFolders: {

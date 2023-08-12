@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add basic command completion support.
 - Simplify language server integration.
 
 ## [0.0.9] - 2023-07-29
