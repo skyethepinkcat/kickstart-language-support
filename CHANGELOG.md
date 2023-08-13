@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.11] - 2023-08-14
+
 - Simplify function name detection in syntax highlighting.
 - Expand completion support.
 - Allow dashes in words.
