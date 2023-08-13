@@ -1,72 +1,6 @@
-import { CancellationToken, CompletionContext, CompletionItem, Position, ProviderResult, TextDocument } from "vscode";
-
-/**
- * Command names to complete.
- */
-const COMMANDS = [
-  "%include",
-  "%ksappend",
-  "authselect",
-  "autopart",
-  "bootloader",
-  "cdrom",
-  "clearpart",
-  "cmdline",
-  "driverdisk",
-  "eula",
-  "fcoe",
-  "firewall",
-  "firstboot",
-  "graphical",
-  "group",
-  "halt",
-  "harddrive",
-  "ignoredisk",
-  "iscsi",
-  "iscsiname",
-  "keyboard",
-  "lang",
-  "liveimg",
-  "logging",
-  "logvol",
-  "mediacheck",
-  "module",
-  "mount",
-  "network",
-  "nfs",
-  "nvdimm",
-  "ostreesetup",
-  "part",
-  "partition",
-  "poweroff",
-  "raid",
-  "realm",
-  "reboot",
-  "repo",
-  "reqpart",
-  "rescue",
-  "rhsm",
-  "rootpw",
-  "selinux",
-  "services",
-  "shutdown",
-  "skipx",
-  "snapshot",
-  "sshkey",
-  "sshpw",
-  "syspurpose",
-  "text",
-  "timesource",
-  "timezone",
-  "url",
-  "user",
-  "vnc",
-  "volgroup",
-  "xconfig",
-  "zerombr",
-  "zfcp",
-  "zipl",
-];
+import { CancellationToken, CompletionContext, CompletionItem, Position, ProviderResult, SnippetString, TextDocument } from "vscode";
+import { CompletionItemKind } from "vscode-languageclient";
+import { COMMANDS } from "./data";
 
 /**
  * Performs code completion.
@@ -78,17 +12,30 @@ const COMMANDS = [
  */
 export function provideKickstartCompletionItems(document: TextDocument, position: Position, _token: CancellationToken, _context: CompletionContext): ProviderResult<CompletionItem[]> {
   const linePrefix = document.lineAt(position).text.substring(0, position.character);
+  const prefixWords = linePrefix.trim().split(/\s+/);
 
-  // Only provide completions for the command name.
-  // The command name is always the first word of a line.
-  //
-  // Note that this check does not take sections into consideration.
-  // Thus, completions may not always be useful in these situations.
+  // Check if the first word has been completed in the prefix.
   if (/\S\s/.test(linePrefix)) {
-    return [];
+    // Provide completions for the command's arguments.
+    // The command is always the first word of a line.
+    const command = prefixWords[0];
+    if (!COMMANDS.has(command)) {
+      return [];
+    }
+
+    return COMMANDS.get(command).map(arg => {
+      const argWords = arg.split(/\s+/, 1);
+      const item = new CompletionItem(argWords[0], CompletionItemKind.Property);
+      item.insertText = new SnippetString(arg);
+      return item;
+    });
   }
 
-  return COMMANDS.map(command => new CompletionItem({
-    label: command,
-  }));
+  // Provide completions for a command.
+  const completions = [];
+  for (const command of COMMANDS.keys()) {
+    completions.push(new CompletionItem(command, CompletionItemKind.Function));
+  }
+
+  return completions;
 }

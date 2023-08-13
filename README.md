@@ -14,6 +14,7 @@ This extension adds the following features to Visual Studio Code:
 
 - Syntax highlighting for `.ks` files.
 - Linting for `.ks` files using `ksvalidator`.
+- Completion support for `.ks` files.
 - Snippets for commonly used sections in `.ks` files.
 
 ## Linter install

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Expand completion support.
+- Allow dashes in words.
+
 ## [0.0.10] - 2023-08-12
 
 - Add basic command completion support.
