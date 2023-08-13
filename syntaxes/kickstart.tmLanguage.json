@@ -11,38 +11,20 @@
     "commands": {
       "patterns": [
         {
-          "comment": "Kickstart commands for installation program configuration and flow control",
-          "match": "^\\s*(cdrom|cmdline|driverdisk|eula|firstboot|graphical|halt|harddrive|liveimg|logging|mediacheck|nfs|ostreesetup|poweroff|reboot|rhsm|shutdown|sshpw|text|url|vnc|%include|%ksappend)\\b",
+          "name": "meta.statement.command.kickstart",
+          "match": "^\\s*(\\S+)(.*)$",
           "captures": {
-            "1": { "name": "keyword.other.command.kickstart" }
-          }
-        },
-        {
-          "comment": "Kickstart commands for system configuration",
-          "match": "^\\s*(authselect|firewall|group|keyboard|lang|module|repo|rootpw|selinux|services|skipx|sshkey|syspurpose|timezone|timesource|user|xconfig)\\b",
-          "captures": {
-            "1": { "name": "keyword.other.command.kickstart" }
-          }
-        },
-        {
-          "comment": "Kickstart commands for network configuration",
-          "match": "^\\s*(network|realm)\\b",
-          "captures": {
-            "1": { "name": "keyword.other.command.kickstart" }
-          }
-        },
-        {
-          "comment": "Kickstart commands for handling storage",
-          "match": "^\\s*(autopart|bootloader|zipl|clearpart|fcoe|ignoredisk|iscsi|iscsiname|logvol|mount|nvdimm|part|partition|raid|reqpart|snapshot|volgroup|zerombr|zfcp)\\b",
-          "captures": {
-            "1": { "name": "keyword.other.command.kickstart" }
-          }
-        },
-        {
-          "comment": "Kickstart commands for system recovery",
-          "match": "^\\s*(rescue)\\b",
-          "captures": {
-            "1": { "name": "keyword.other.command.kickstart" }
+            "1": {
+              "name": "entity.name.command.kickstart meta.statement.command.name.kickstart"
+            },
+            "2": {
+              "patterns": [
+                {
+                  "name": "string.unquoted.argument.kickstart meta.argument.kickstart",
+                  "match": "\\S+"
+                }
+              ]
+            }
           }
         }
       ]
