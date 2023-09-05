@@ -53,9 +53,13 @@
         "scopeName": "source.kickstart",
         "path": "./syntaxes/kickstart.tmLanguage.json",
         "embeddedLanguages": {
+          "meta.embedded.block.perl": "perl",
+          "meta.embedded.block.python": "python",
           "meta.embedded.block.shellscript": "shellscript"
         },
         "tokenTypes": {
+          "meta.embedded.block.perl": "other",
+          "meta.embedded.block.python": "other",
           "meta.embedded.block.shellscript": "other"
         }
       }

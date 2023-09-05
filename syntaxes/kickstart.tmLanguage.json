@@ -88,6 +88,30 @@
         },
         {
           "name": "meta.section.script.kickstart",
+          "begin": "^\\s*(%(pre|pre-install|post|onerror))\\b.*\\s+--interpreter=/?([^\\s]+/)*perl\\b.*$",
+          "end": "^\\s*(%end)\\s*$",
+          "captures": {
+            "1": {
+              "name": "keyword.control.script.kickstart"
+            }
+          },
+          "contentName": "meta.embedded.block.perl",
+          "patterns": [{ "include": "source.perl" }]
+        },
+        {
+          "name": "meta.section.script.kickstart",
+          "begin": "^\\s*(%(pre|pre-install|post|onerror))\\b.*\\s+--interpreter=/?([^\\s]+/)*\\w*python\\w*\\b.*$",
+          "end": "^\\s*(%end)\\s*$",
+          "captures": {
+            "1": {
+              "name": "keyword.control.script.kickstart"
+            }
+          },
+          "contentName": "meta.embedded.block.python",
+          "patterns": [{ "include": "source.python" }]
+        },
+        {
+          "name": "meta.section.script.kickstart",
           "begin": "^\\s*(%(pre|pre-install|post|onerror))\\b.*$",
           "end": "^\\s*(%end)\\s*$",
           "captures": {
