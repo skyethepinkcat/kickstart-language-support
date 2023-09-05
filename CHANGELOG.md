@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.12] - 2023-09-05
+
 - Add interpreter-specific syntax highlighting.
 
 ## [0.0.11] - 2023-08-14
