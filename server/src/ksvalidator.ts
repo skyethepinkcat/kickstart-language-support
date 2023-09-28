@@ -19,7 +19,7 @@ export async function ksvalidatorDiagnostics(textDocumentUri: DocumentUri): Prom
 
   // Run ksvalidator and extract errors from stderr.
   const ksvalidator = spawnSync("ksvalidator", ["--", uri.fsPath]);
-  const stderr = ksvalidator.status !== 0 ? ksvalidator.stderr.toString() : "";
+  const stderr = (ksvalidator.status !== 0 && ksvalidator.stderr) ? ksvalidator.stderr.toString() : "";
   const lines = stderr.split("\n").filter((str) => str);
 
   const lineRegex = RegExp("on line (\\d+) of");
@@ -53,7 +53,13 @@ export async function ksvalidatorDiagnostics(textDocumentUri: DocumentUri): Prom
  * @returns `true` if `ksvalidator` is available.
  */
 export function ksvalidatorAvailable(): boolean {
-  // The --help flag should always result in a clean exit if the program is available.
-  const ksvalidator = spawnSync("ksvalidator", ["--help"]);
-  return ksvalidator.status === 0;
+  try {
+    // The --help flag should always result in a clean exit if the program is available.
+    const ksvalidator = spawnSync("ksvalidator", ["--help"]);
+    return ksvalidator.status === 0;
+  } catch (error) {
+    console.error("Failed to check ksvalidator availability", error);
+  }
+
+  return false;
 }
