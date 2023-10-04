@@ -88,7 +88,7 @@
         },
         {
           "name": "meta.section.script.kickstart",
-          "begin": "^\\s*(%(pre|pre-install|post|onerror))\\b.*\\s+--interpreter=/?([^\\s]+/)*perl\\b.*$",
+          "begin": "^\\s*(%(pre-install|pre|post|onerror))\\b.*\\s+--interpreter=/?([^\\s]+/)*perl\\b.*$",
           "end": "^\\s*(%end)\\s*$",
           "captures": {
             "1": {
@@ -100,7 +100,7 @@
         },
         {
           "name": "meta.section.script.kickstart",
-          "begin": "^\\s*(%(pre|pre-install|post|onerror))\\b.*\\s+--interpreter=/?([^\\s]+/)*\\w*python\\w*\\b.*$",
+          "begin": "^\\s*(%(pre-install|pre|post|onerror))\\b.*\\s+--interpreter=/?([^\\s]+/)*\\w*python\\w*\\b.*$",
           "end": "^\\s*(%end)\\s*$",
           "captures": {
             "1": {
@@ -112,7 +112,7 @@
         },
         {
           "name": "meta.section.script.kickstart",
-          "begin": "^\\s*(%(pre|pre-install|post|onerror))\\b.*$",
+          "begin": "^\\s*(%(pre-install|pre|post|onerror))\\b.*$",
           "end": "^\\s*(%end)\\s*$",
           "captures": {
             "1": {

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Fix syntax highlighting issue with `%pre-install`.
+
 ## [0.0.13] - 2023-09-28
 
 - Fix language server crash when `ksvalidator` is unavailable.
