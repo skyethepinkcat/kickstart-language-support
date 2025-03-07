@@ -121,6 +121,13 @@
           },
           "contentName": "meta.embedded.block.shellscript",
           "patterns": [{ "include": "source.shell" }]
+        },
+        {
+          "name": "meta.section.script.kickstart",
+          "begin": "<%=?",
+          "end": "-?%>",
+          "contentName": "meta.embedded.block.ruby",
+          "patterns": [{ "include": "source.ruby" }]
         }
       ]
     },
